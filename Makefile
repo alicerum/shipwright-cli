@@ -16,6 +16,9 @@ $(BIN):
 
 build: $(BIN)
 
+clean:
+	rm -rf "$(OUTPUT_DIR)"
+
 run:
 	go run $(GO_FLAGS) $(CMD) $(ARGS)
 
