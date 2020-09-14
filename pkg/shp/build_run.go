@@ -17,12 +17,11 @@ const BuildRunKind = "BuildRun"
 
 // Create a BuildRun resource with informed name and spec.
 func (b *BuildRun) Create(name string, spec *buildv1alpha1.BuildRunSpec) error {
-	u, err := ToUnstructured(&buildv1alpha1.BuildRun{Spec: *spec})
+	gvk := buildv1alpha1.SchemeGroupVersion.WithKind(BuildRunKind)
+	u, err := ToUnstructured(name, gvk, &buildv1alpha1.BuildRun{Spec: *spec})
 	if err != nil {
 		return err
 	}
-	u.SetGroupVersionKind(buildv1alpha1.SchemeGroupVersion.WithKind(BuildRunKind))
-	u.SetName(name)
 
 	_, err = b.client.Create(u, metav1.CreateOptions{})
 	return err
