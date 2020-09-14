@@ -7,12 +7,18 @@ import (
 )
 
 var (
+	// kubeContext flag for custom kubernetes context.
 	kubeContext string
-	dryRun      bool
-	kubeconfig  string
-	namespace   string
+	// dryRun flag for dry-run mode, avoid changes against the API server.
+	dryRun bool
+	// kubeconfig flag for the path to alternative kubeconfig file.
+	kubeconfig string
+	// namespace flag for custom kubernetes namespace.
+	namespace string
 )
 
+// rootCmd primary entrypoint for the command-line application, contains global flags, and
+// sub-commands are linked to.
 var rootCmd = &cobra.Command{
 	Use:   "shp [command]",
 	Short: "Command-line client for Shipwright Build Operator.",
@@ -21,7 +27,6 @@ var rootCmd = &cobra.Command{
 // init setup flags on the root command.
 func init() {
 	flags := rootCmd.PersistentFlags()
-
 	flags.StringVar(
 		&kubeContext,
 		"context",

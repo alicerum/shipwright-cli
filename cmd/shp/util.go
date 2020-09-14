@@ -56,5 +56,7 @@ func newSHP() (*shp.SHP, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: it must have a single shared context, hooked to the signal trapping mechanism, when the
+	// command is interrupted, the same must happen in the context.
 	return shp.NewSHP(context.TODO(), namespace, client), nil
 }
