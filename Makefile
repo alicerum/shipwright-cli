@@ -16,6 +16,12 @@ $(BIN):
 
 build: $(BIN)
 
+# creates a kubectl prefixed shp binary, "kubectl-shp". When placed on user's PATH, works as a
+# kubectl plugin, therefore "kubectl shp" becomes available
+.PHONY: kubectl
+kubectl: BIN = $(OUTPUT_DIR)/kubectl-$(APP)
+kubectl: $(BIN)
+
 clean:
 	rm -rf "$(OUTPUT_DIR)"
 
