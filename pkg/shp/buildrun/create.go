@@ -15,7 +15,7 @@ func NewCreateBuildRun() *BuildRun {
 	return newBuildRun(cmd, util.Create)
 }
 
-// NewRunBuild represents the "run build" sub-command
+// NewRunBuild represents the "run build" sub-command.
 func NewRunBuild() *BuildRun {
 	cmd := &cobra.Command{
 		Use:          "run build [name]",

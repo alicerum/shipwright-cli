@@ -6,10 +6,11 @@ import (
 	"k8s.io/client-go/dynamic"
 )
 
+// Runner execute the sub-command lifecycle, wrapper around sub-commands.
 type Runner struct {
-	opts      *Options
-	ioStreams genericclioptions.IOStreams
-	subCmd    SubCommand
+	opts      *Options                    // global options
+	ioStreams genericclioptions.IOStreams // input, output and error io streams
+	subCmd    SubCommand                  // sub-command instance
 }
 
 // Cmd is a wrapper around sub-command's Cobra, it wires up global flags and set a single RunE
@@ -21,6 +22,8 @@ func (r *Runner) Cmd() *cobra.Command {
 	return cmd
 }
 
+// dynamicClientNamespace instantiate a dynamic client, and configure the target namespace. When
+// --namespace is not informed, it uses the default configured locally.
 func (r *Runner) dynamicClientNamespace() (dynamic.Interface, string, error) {
 	f := r.opts.Factory()
 	configLoader := f.ToRawKubeConfigLoader()
@@ -46,6 +49,8 @@ func (r *Runner) dynamicClientNamespace() (dynamic.Interface, string, error) {
 	return client, namespace, nil
 }
 
+// RunE cobra.Command's RunE implementation focusing on sub-commands lifecycle. To achieve it, a
+// dynamic client and configured namespace are informed.
 func (r *Runner) RunE(cmd *cobra.Command, args []string) error {
 	client, ns, err := r.dynamicClientNamespace()
 	if err != nil {
@@ -61,6 +66,7 @@ func (r *Runner) RunE(cmd *cobra.Command, args []string) error {
 	return r.subCmd.Run(client, ns)
 }
 
+// NewRunner instantiate a Runner.
 func NewRunner(opts *Options, ioStreams genericclioptions.IOStreams, subCmd SubCommand) *Runner {
 	return &Runner{opts: opts, ioStreams: ioStreams, subCmd: subCmd}
 }

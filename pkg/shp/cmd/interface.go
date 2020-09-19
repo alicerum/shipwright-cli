@@ -5,6 +5,7 @@ import (
 	"k8s.io/client-go/dynamic"
 )
 
+// SubCommand defines the methods for a sub-command wrapped with Runner.
 type SubCommand interface {
 	Cmd() *cobra.Command
 	Complete(client dynamic.Interface, ns string, args []string) error

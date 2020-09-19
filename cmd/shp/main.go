@@ -9,6 +9,7 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
 
+// ApplicationName application name.
 const ApplicationName = "kubectl-shp"
 
 func main() {

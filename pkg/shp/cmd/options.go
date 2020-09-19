@@ -23,6 +23,7 @@ func (o *Options) AddFlags(flags *pflag.FlagSet) {
 	o.matchVersionFlags.AddFlags(flags)
 }
 
+// Factory exposes the kubectl's Factory to instantiate API clients and interact with configuration.
 func (o *Options) Factory() kcmdutil.Factory {
 	if o.factory != nil {
 		return o.factory
