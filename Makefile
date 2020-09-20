@@ -41,3 +41,7 @@ test: test-unit
 .PHONY: test-unit
 test-unit:
 	go test $(GO_FLAGS) $(GO_TEST_FLAGS) $(CMD) $(PKG) $(ARGS)
+
+travis:
+	./hack/install-kubectl.sh
+	./hack/install-kind.sh
