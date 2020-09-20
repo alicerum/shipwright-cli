@@ -3,7 +3,9 @@ OUTPUT_DIR ?= _output
 
 CMD = ./cmd/$(APP)/...
 PKG = ./pkg/...
-BIN = $(OUTPUT_DIR)/$(APP)
+
+BIN ?= $(OUTPUT_DIR)/$(APP)
+KUBECTL_BIN ?= $(OUTPUT_DIR)/kubectl-$(APP)
 
 GO_FLAGS ?= -v -mod=vendor
 GO_TEST_FLAGS ?= -race -cover
@@ -16,11 +18,17 @@ $(BIN):
 
 build: $(BIN)
 
-# creates a kubectl prefixed shp binary, "kubectl-shp". When placed on user's PATH, works as a
-# kubectl plugin, therefore "kubectl shp" becomes available
+install: build
+	install -m 0755 $(BIN) /usr/local/bin/
+
+# creates a kubectl prefixed shp binary, "kubectl-shp", and when installed under $PATH, will be
+# visible as "kubectl shp".
 .PHONY: kubectl
-kubectl: BIN = $(OUTPUT_DIR)/kubectl-$(APP)
+kubectl: BIN = $(KUBECTL_BIN)
 kubectl: $(BIN)
+
+kubectl-install: BIN = $(KUBECTL_BIN)
+kubectl-install: kubectl install
 
 clean:
 	rm -rf "$(OUTPUT_DIR)"
