@@ -1,4 +1,7 @@
 <p align="center">
+    <a alt="travis-ci.org build and tests status" href="https://travis-ci.org/github/otaviof/shp">
+        <img src="https://travis-ci.org/otaviof/shp.svg?branch=master">
+    </a>
     <a alt="go.pkg.dev project documentation" href="https://pkg.go.dev/mod/github.com/otaviof/shp">
         <img src="https://img.shields.io/badge/go.pkg.dev-docs-007d9c?logo=go&logoColor=white">
     </a>
