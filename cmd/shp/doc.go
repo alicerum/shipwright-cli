@@ -1,3 +1,2 @@
-// The main package contains all things related to the command-line interface, like flags, return
-// codes, help messages and such.
+// Package main is a wrapper around "cmd" internal package.
 package main
