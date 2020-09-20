@@ -1,21 +1,13 @@
 #!/bin/bash
-
-# Copyright The Shipwright Contributors
-# 
-# SPDX-License-Identifier: Apache-2.0
-
 #
 # Installs KinD (Kubernetes in Docker) via "go get" and configure it as current context.
 #
 
 set -eu
 
-# kind version
-KIND_VERSION="${KIND_VERSION:-v0.7.0}"
-
 if [ ! -f "${GOPATH}/bin/kind" ] ; then
     echo "# Installing KinD..."
-    go get sigs.k8s.io/kind@${KIND_VERSION}
+    GO111MODULE=off go get sigs.k8s.io/kind
 fi
 
 # print kind version
