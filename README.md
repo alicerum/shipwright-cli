@@ -6,13 +6,16 @@
         <img src="https://goreportcard.com/badge/github.com/otaviof/shp">
     </a>
 </p>
-<hr/>
 
 `shp` (PoC)
 -----------
 
 This is a proof-of-concept implementation of a command-line client for
-[Shipwright's Build](shipwrightbuild) operator.
+[Shipwright's Build](shipwrightbuild) operator, which uses the same pattern than `kubectl`/`oc` and
+can be used as a staandalone binary and as a `kubectl` plugin.
+
+You can expect to read developer's documentation bellow, the focus on final users with extend
+usage documentation will come in the near future.
 
 ## Build and Install
 

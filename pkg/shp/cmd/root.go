@@ -19,6 +19,9 @@ func NewCmdSHP(ioStreams genericclioptions.IOStreams) *cobra.Command {
 	// wiring up root command flags with options instance
 	opts.AddFlags(rootCmd.Flags())
 
+	// declaring all other sub-command organized by groups, those are wrapped with a Runner instance
+	// that will both implement the component lifecycle and share cobra.Commands. At the end, all is
+	// linked against root command
 	cg := templates.CommandGroups{{
 		Message: "Initialize repository commands:",
 		Commands: []*cobra.Command{
@@ -36,7 +39,6 @@ func NewCmdSHP(ioStreams genericclioptions.IOStreams) *cobra.Command {
 			NewRunner(opts, ioStreams, buildrun.NewRunBuild()).Cmd(),
 		},
 	}}
-	// linking command groups with root command
 	cg.Add(rootCmd)
 
 	return rootCmd
