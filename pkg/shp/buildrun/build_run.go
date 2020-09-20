@@ -21,6 +21,7 @@ type BuildRun struct {
 }
 
 // TODO: move constant into the operator itself;
+
 // BuildRunKind BuildRun API resource kind.
 const BuildRunKind = "BuildRun"
 

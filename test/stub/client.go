@@ -7,6 +7,7 @@ import (
 	"k8s.io/client-go/dynamic/fake"
 )
 
+// NewFakeClient creates a fake client with Shipwright's Build scheme.
 func NewFakeClient() dynamic.Interface {
 	scheme := runtime.NewScheme()
 	buildv1alpha1.SchemeBuilder.AddToScheme(scheme)
