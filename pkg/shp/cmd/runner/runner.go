@@ -1,9 +1,9 @@
-package cmd
+package runner
 
 import (
+	"github.com/shipwright-io/cli/pkg/shp/params"
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
-	"k8s.io/client-go/dynamic"
 )
 
 // Runner execute the sub-command lifecycle, wrapper around sub-commands.
@@ -22,48 +22,29 @@ func (r *Runner) Cmd() *cobra.Command {
 	return cmd
 }
 
-// dynamicClientNamespace instantiate a dynamic client, and configure the target namespace. When
-// --namespace is not informed, it uses the default configured locally.
-func (r *Runner) dynamicClientNamespace() (dynamic.Interface, string, error) {
-	f := r.opts.Factory()
-	configLoader := f.ToRawKubeConfigLoader()
-
+func (r *Runner) createParams() (params.Params, error) {
 	namespace := *r.opts.configFlags.Namespace
-	if namespace == "" {
-		var err error
-		ns, _, err := configLoader.Namespace()
-		if err != nil {
-			return nil, "", err
-		}
-		namespace = ns
-	}
+	context := *r.opts.configFlags.Context
+	configPath := *r.opts.configFlags.KubeConfig
 
-	restConfig, err := configLoader.ClientConfig()
-	if err != nil {
-		return nil, "", err
-	}
-	client, err := dynamic.NewForConfig(restConfig)
-	if err != nil {
-		return nil, "", err
-	}
-	return client, namespace, nil
+	return params.NewParams(configPath, namespace, context)
 }
 
 // RunE cobra.Command's RunE implementation focusing on sub-commands lifecycle. To achieve it, a
 // dynamic client and configured namespace are informed.
 func (r *Runner) RunE(cmd *cobra.Command, args []string) error {
-	client, ns, err := r.dynamicClientNamespace()
+	params, err := r.createParams()
 	if err != nil {
 		return err
 	}
 
-	if err = r.subCmd.Complete(client, ns, args); err != nil {
+	if err = r.subCmd.Complete(params, args); err != nil {
 		return err
 	}
 	if err = r.subCmd.Validate(); err != nil {
 		return err
 	}
-	return r.subCmd.Run(client, ns)
+	return r.subCmd.Run(params)
 }
 
 // NewRunner instantiate a Runner.

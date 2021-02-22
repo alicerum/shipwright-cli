@@ -1,13 +1,13 @@
-package cmd
+package runner
 
 import (
 	"os"
 	"testing"
 
 	"github.com/onsi/gomega"
+	"github.com/shipwright-io/cli/pkg/shp/params"
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
-	"k8s.io/client-go/dynamic"
 )
 
 type mockedSubCommand struct{}
@@ -18,7 +18,7 @@ func (m *mockedSubCommand) Cmd() *cobra.Command {
 	return testCmd
 }
 
-func (m *mockedSubCommand) Complete(client dynamic.Interface, ns string, args []string) error {
+func (m *mockedSubCommand) Complete(p params.Params, args []string) error {
 	return nil
 }
 
@@ -26,7 +26,7 @@ func (m *mockedSubCommand) Validate() error {
 	return nil
 }
 
-func (m *mockedSubCommand) Run(client dynamic.Interface, ns string) error {
+func (m *mockedSubCommand) Run(p params.Params) error {
 	return nil
 }
 
@@ -47,7 +47,10 @@ func TestCMD_Runner(t *testing.T) {
 	})
 
 	t.Run("dynamicClientNamespace", func(t *testing.T) {
-		client, ns, err := r.dynamicClientNamespace()
+		params, err := r.createParams()
+		client, _ := params.Client()
+
+		ns := params.Namespace()
 
 		g.Expect(err).To(gomega.BeNil())
 		g.Expect(ns).To(gomega.Equal(testNs))

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/otaviof/shp/pkg/shp/cmd"
+	"github.com/shipwright-io/cli/pkg/shp/cmd"
 	"github.com/spf13/pflag"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 )

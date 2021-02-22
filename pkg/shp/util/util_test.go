@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/onsi/gomega"
-	"github.com/otaviof/shp/test/stub"
+	"github.com/shipwright-io/cli/test/stub"
 )
 
 func TestUtil_ToUnstructured(t *testing.T) {
