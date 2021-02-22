@@ -75,7 +75,7 @@ func (c *CreateCommand) initializeBuild() {
 		},
 	}
 
-	if c.image != "" {
+	if c.image != "" 
 		c.build.Spec.Output = buildv1alpha1.Image{
 			ImageURL: c.image,
 		}

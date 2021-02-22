@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"github.com/shipwright-io/cli/pkg/shp/params"
 	"github.com/spf13/cobra"
 
 	"github.com/shipwright-io/cli/pkg/shp/params"
