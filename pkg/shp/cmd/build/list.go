@@ -6,10 +6,10 @@ import (
 	"text/tabwriter"
 
 	buildv1alpha1 "github.com/shipwright-io/build/pkg/apis/build/v1alpha1"
-	"github.com/spf13/cobra"
 
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/spf13/cobra"
 )
 
 // ListCommand struct contains user input to the List subcommand of Build

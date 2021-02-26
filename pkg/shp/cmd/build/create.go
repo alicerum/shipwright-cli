@@ -2,14 +2,15 @@ package build
 
 import (
 	"errors"
+	"fmt"
 
 	buildv1alpha1 "github.com/shipwright-io/build/pkg/apis/build/v1alpha1"
-	"github.com/spf13/cobra"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/shipwright-io/cli/pkg/shp/util"
+	"github.com/spf13/cobra"
 )
 
 // CreateCommand contains data input from user
@@ -26,33 +27,33 @@ type CreateCommand struct {
 }
 
 func createCmd() runner.SubCommand {
-	createCommand := &CreateCommand{
-		cmd: &cobra.Command{
-			Use:   "create [flags] name strategy url",
-			Short: "Create Build",
-		},
+	c := &cobra.Command{
+		Use:   "create [flags] name strategy url",
+		Short: "Create Build",
 	}
 
-	createCommand.cmd.Flags().StringVarP(&createCommand.image, "output-image", "i", "", "Output image created by build")
+	c.Flags().StringP("image", "i", "", "Output image created by build")
 
-	return createCommand
+	return &CreateCommand{
+		cmd: c,
+	}
 }
 
-// Cmd returns cobra Command object of the create subcommand
 func (c *CreateCommand) Cmd() *cobra.Command {
 	return c.cmd
 }
 
-// Complete fills internal subcommand structure for future work with user input
 func (c *CreateCommand) Complete(params *params.Params, args []string) error {
 
 	if len(args) < 3 {
-		return errors.New("not enough arguments for Build create")
+		return errors.New("Not enough arguments for Build create")
 	}
 
 	c.name = args[0]
 	c.strategy = args[1]
 	c.url = args[2]
+
+	c.image = c.cmd.Flag("image").Value.String()
 
 	return nil
 }
@@ -62,38 +63,42 @@ func (c *CreateCommand) initializeBuild() {
 
 	c.build = &buildv1alpha1.Build{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: c.name,
+			Name: sc.name,
 		},
 		Spec: buildv1alpha1.BuildSpec{
 			StrategyRef: &buildv1alpha1.StrategyRef{
-				Name: c.strategy,
+				Name: sc.strategy,
 				Kind: &strategyKind,
 			},
 			Source: buildv1alpha1.GitSource{
-				URL: c.url,
+				URL: sc.url,
 			},
 		},
 	}
 
-	if c.image != "" 
+	if c.image != "" {
 		c.build.Spec.Output = buildv1alpha1.Image{
 			ImageURL: c.image,
 		}
 	}
 }
 
-// Validate is used for user input validation of flags and other data
 func (c *CreateCommand) Validate() error {
 	if c.strategy != "buildah" {
-		return errors.New("incorrect strategy, must be 'buildah'")
+		return errors.New("Incorrect strategy, must be 'buildah'")
 	}
 
 	return nil
 }
 
-// Run contains main logic of the create subcommand
 func (c *CreateCommand) Run(params *params.Params) error {
+	fmt.Println("Url is " + sc.url)
+
 	c.initializeBuild()
+
+	client, err := params.Client()
+	if err != nil {
+		return nil
 
 	return buildResource.Create(c.name, c.build)
 }

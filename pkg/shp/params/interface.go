@@ -1,6 +1,7 @@
 package params
 
 import (
+	"github.com/spf13/pflag"
 	"k8s.io/client-go/dynamic"
 )
 
@@ -9,6 +10,5 @@ type Params interface {
 
 	Namespace() string
 
-	SetKubeConfigPath(kubeConfigPath string)
-	SetKubeContext(kubeContext string)
+	AddFlags(f *pflag.FlagSet)
 }

@@ -4,13 +4,11 @@ import (
 	"errors"
 
 	buildv1alpha1 "github.com/shipwright-io/build/pkg/apis/build/v1alpha1"
-	"github.com/spf13/cobra"
-
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/spf13/cobra"
 )
 
-// DeleteCommand contains data provided by user to the delete subcommand
 type DeleteCommand struct {
 	name string
 
@@ -18,38 +16,34 @@ type DeleteCommand struct {
 }
 
 func deleteCmd() runner.SubCommand {
-	deleteCommand := &DeleteCommand{
-		cmd: &cobra.Command{
-			Use:   "delete [flags] name",
-			Short: "Delete Build",
-		},
+	c := &cobra.Command{
+		Use:   "delete [flags] name",
+		Short: "Delete Build",
 	}
 
-	return deleteCommand
+	return &DeleteCommand{
+		cmd: c,
+	}
 }
 
-// Cmd returns cobra command object of the delete subcommand
-func (c *DeleteCommand) Cmd() *cobra.Command {
-	return c.cmd
+func (s *DeleteCommand) Cmd() *cobra.Command {
+	return s.cmd
 }
 
-// Complete fills DeleteSubCommand structure with data obtained from cobra command
-func (c *DeleteCommand) Complete(params *params.Params, args []string) error {
-	if len(args) == 0 {
-		return errors.New("missing 'name' argument")
+func (s *DeleteCommand) Complete(params *params.Params, args []string) error {
+	if len(args) < 1 {
+		return errors.New("Missing 'name' argument")
 	}
 
-	c.name = args[0]
+	s.name = args[0]
 
 	return nil
 }
 
-// Validate is used for validation of user input data
 func (c *DeleteCommand) Validate() error {
 	return nil
 }
 
-// Run contains main logic of delete subcommand
 func (c *DeleteCommand) Run(params *params.Params) error {
 	var b buildv1alpha1.Build
 
