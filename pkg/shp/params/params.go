@@ -2,60 +2,39 @@ package params
 
 import (
 	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
+	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
 )
 
 type ShipwrightParams struct {
-	client         dynamic.Interface
+	client dynamic.Interface
+
 	kubeConfigPath string
 	kubeContext    string
 	namespace      string
+
+	configFlags *genericclioptions.ConfigFlags
 }
 
-func (p *ShipwrightParams) config() (*rest.Config, error) {
-	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
-	if p.kubeConfigPath != "" {
-		loadingRules.ExplicitPath = p.kubeConfigPath
-	}
-
-	configOverrides := &clientcmd.ConfigOverrides{}
-	if p.kubeContext != "" {
-		configOverrides.CurrentContext = p.kubeContext
-	}
-
-	kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, configOverrides)
-	if p.namespace == "" {
-		namespace, _, err := kubeConfig.Namespace()
-		if err != nil {
-			return nil, errors.Wrap(err, "Could not get namespace from KubeConfig")
-		}
-		p.namespace = namespace
-	}
-
-	config, err := kubeConfig.ClientConfig()
-	if err != nil {
-		return nil, errors.Wrap(err, "Could not parse KubeConfig")
-	}
-
-	return config, nil
+func (p *ShipwrightParams) initKubeConfig() {
+	p.namespace = *p.configFlags.Namespace
+	p.kubeContext = *p.configFlags.Context
+	p.kubeConfigPath = *p.configFlags.KubeConfig
 }
 
-func (p *ShipwrightParams) SetKubeConfigPath(kubeConfigPath string) {
-	p.kubeConfigPath = kubeConfigPath
-}
-
-func (p *ShipwrightParams) SetKubeContext(kubeContext string) {
-	p.kubeContext = kubeContext
+func (p *ShipwrightParams) AddFlags(flags *pflag.FlagSet) {
+	p.configFlags.AddFlags(flags)
 }
 
 func (p *ShipwrightParams) Client() (dynamic.Interface, error) {
+	p.initKubeConfig()
+
 	if p.client != nil {
 		return p.client, nil
 	}
 
-	config, err := p.config()
+	config, err := p.configFlags.ToRESTConfig()
 	if err != nil {
 		return nil, err
 	}
@@ -74,15 +53,9 @@ func (p *ShipwrightParams) Namespace() string {
 	return p.namespace
 }
 
-func NewParams(configPath string, namespace string, context string) (Params, error) {
-	p := &ShipwrightParams{
-		namespace:      namespace,
-		kubeContext:    context,
-		kubeConfigPath: configPath,
-	}
+func NewParams() Params {
+	p := &ShipwrightParams{}
+	p.configFlags = genericclioptions.NewConfigFlags(true)
 
-	// initialize clients to be used immediately
-	// along with struct fielst like Namespace
-	_, err := p.Client()
-	return p, err
+	return p
 }
