@@ -43,8 +43,6 @@ func Command(p params.Params) *cobra.Command {
 		ErrOut: os.Stderr,
 	}
 
-	p.AddFlags(command.PersistentFlags())
-
 	command.AddCommand(
 		runner.NewRunner(p, streams, createSubCmd()).Cmd(),
 		runner.NewRunner(p, streams, listSubCmd()).Cmd(),

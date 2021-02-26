@@ -10,17 +10,7 @@ import (
 type ShipwrightParams struct {
 	client dynamic.Interface
 
-	kubeConfigPath string
-	kubeContext    string
-	namespace      string
-
 	configFlags *genericclioptions.ConfigFlags
-}
-
-func (p *ShipwrightParams) initKubeConfig() {
-	p.namespace = *p.configFlags.Namespace
-	p.kubeContext = *p.configFlags.Context
-	p.kubeConfigPath = *p.configFlags.KubeConfig
 }
 
 func (p *ShipwrightParams) AddFlags(flags *pflag.FlagSet) {
@@ -28,8 +18,6 @@ func (p *ShipwrightParams) AddFlags(flags *pflag.FlagSet) {
 }
 
 func (p *ShipwrightParams) Client() (dynamic.Interface, error) {
-	p.initKubeConfig()
-
 	if p.client != nil {
 		return p.client, nil
 	}
@@ -50,7 +38,7 @@ func (p *ShipwrightParams) Client() (dynamic.Interface, error) {
 }
 
 func (p *ShipwrightParams) Namespace() string {
-	return p.namespace
+	return *p.configFlags.Namespace
 }
 
 func NewParams() Params {

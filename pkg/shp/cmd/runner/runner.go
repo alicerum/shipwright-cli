@@ -18,7 +18,6 @@ type Runner struct {
 func (r *Runner) Cmd() *cobra.Command {
 	cmd := r.subCmd.Cmd()
 	cmd.RunE = r.RunE
-	r.p.AddFlags(cmd.PersistentFlags())
 	return cmd
 }
 

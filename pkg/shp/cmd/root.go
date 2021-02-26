@@ -19,7 +19,7 @@ func NewCmdSHP(ioStreams genericclioptions.IOStreams) *cobra.Command {
 	// opts.AddFlags(rootCmd.Flags())
 
 	p := params.NewParams()
-	p.AddFlags(rootCmd.Flags())
+	p.AddFlags(rootCmd.PersistentFlags())
 
 	rootCmd.AddCommand(build.Command(p))
 
