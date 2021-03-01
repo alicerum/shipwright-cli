@@ -2,14 +2,12 @@ package build
 
 import (
 	"errors"
-	"fmt"
 
 	buildv1alpha1 "github.com/shipwright-io/build/pkg/apis/build/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
-	"github.com/shipwright-io/cli/pkg/shp/util"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +30,7 @@ func createCmd() runner.SubCommand {
 		Short: "Create Build",
 	}
 
-	c.Flags().StringP("image", "i", "", "Output image created by build")
+	c.Flags().StringP("output-image", "i", "", "Output image created by build")
 
 	return &CreateCommand{
 		cmd: c,
@@ -52,8 +50,6 @@ func (c *CreateCommand) Complete(params *params.Params, args []string) error {
 	c.name = args[0]
 	c.strategy = args[1]
 	c.url = args[2]
-
-	c.image = c.cmd.Flag("image").Value.String()
 
 	return nil
 }
@@ -91,14 +87,8 @@ func (c *CreateCommand) Validate() error {
 	return nil
 }
 
-func (c *CreateCommand) Run(params *params.Params) error {
-	fmt.Println("Url is " + sc.url)
-
+func (c *CreateCommand) Run(params params.Params) error {
 	c.initializeBuild()
-
-	client, err := params.Client()
-	if err != nil {
-		return nil
 
 	return buildResource.Create(c.name, c.build)
 }

@@ -68,7 +68,7 @@ func (r *Resource) Get(name string, result interface{}) error {
 	return util.GetObject(ri, name, result)
 }
 
-func NewShpResource(p *params.Params, gv schema.GroupVersion, kind, resource string) *Resource {
+func NewResource(p *params.Params, gv schema.GroupVersion, kind, resource string) *Resource {
 	sr := &Resource{
 		gv:       gv,
 		kind:     kind,

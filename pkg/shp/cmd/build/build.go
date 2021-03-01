@@ -16,8 +16,9 @@ import (
 )
 
 var (
-	BuildGV   schema.GroupVersion
-	BuildGVR  schema.GroupVersionResource
+	BuildGV  schema.GroupVersion
+	BuildGVR schema.GroupVersionResource
+
 	BuildKind string
 	BuildGVK  schema.GroupVersionKind
 )
