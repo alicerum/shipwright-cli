@@ -26,18 +26,18 @@ func fromUnstructured(u map[string]interface{}, obj interface{}) error {
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(u, obj)
 }
 
-func CreateObject(res dynamic.ResourceInterface, name string, gvk schema.GroupVersionKind, obj interface{}) error {
+func CreateObject(resource dynamic.ResourceInterface, name string, gvk schema.GroupVersionKind, obj interface{}) error {
 	u, err := toUnstructured(name, gvk, obj)
 	if err != nil {
 		return err
 	}
 
-	_, err = res.Create(context.TODO(), u, v1.CreateOptions{})
+	_, err = resource.Create(context.TODO(), u, v1.CreateOptions{})
 	return err
 }
 
-func GetObject(res dynamic.ResourceInterface, name string, gvr schema.GroupVersionResource, obj interface{}) error {
-	u, err := res.Get(context.TODO(), name, v1.GetOptions{})
+func GetObject(resource dynamic.ResourceInterface, name string, obj interface{}) error {
+	u, err := resource.Get(context.TODO(), name, v1.GetOptions{})
 	if err != nil {
 		return err
 	}
@@ -45,12 +45,11 @@ func GetObject(res dynamic.ResourceInterface, name string, gvr schema.GroupVersi
 	return fromUnstructured(u.UnstructuredContent(), obj)
 }
 
-func DeleteObject(res dynamic.ResourceInterface, name string, gvr schema.GroupVersionResource) error {
-	return res.Delete(context.TODO(), name, v1.DeleteOptions{})
+func DeleteObject(resource dynamic.ResourceInterface, name string, gvr schema.GroupVersionResource) error {
+	return resource.Delete(context.TODO(), name, v1.DeleteOptions{})
 }
 
 func ListObject(resource dynamic.ResourceInterface, result interface{}) error {
-
 	u, err := resource.List(context.TODO(), v1.ListOptions{})
 	if err != nil {
 		return err

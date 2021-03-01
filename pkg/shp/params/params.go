@@ -11,6 +11,7 @@ type ShipwrightParams struct {
 	client dynamic.Interface
 
 	configFlags *genericclioptions.ConfigFlags
+	namespace   string
 }
 
 func (p *ShipwrightParams) AddFlags(flags *pflag.FlagSet) {
@@ -27,18 +28,21 @@ func (p *ShipwrightParams) Client() (dynamic.Interface, error) {
 		return nil, err
 	}
 
-	dynamic, err := dynamic.NewForConfig(config)
+	p.namespace, _, err = p.configFlags.ToRawKubeConfigLoader().Namespace()
+	if err != nil {
+		return nil, err
+	}
+
+	p.client, err = dynamic.NewForConfig(config)
 	if err != nil {
 		return nil, errors.Wrap(err, "Could not create Dynamic client")
 	}
-
-	p.client = dynamic
 
 	return p.client, nil
 }
 
 func (p *ShipwrightParams) Namespace() string {
-	return *p.configFlags.Namespace
+	return p.namespace
 }
 
 func NewParams() Params {

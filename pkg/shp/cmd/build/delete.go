@@ -6,7 +6,6 @@ import (
 	buildv1alpha1 "github.com/shipwright-io/build/pkg/apis/build/v1alpha1"
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
-	"github.com/shipwright-io/cli/pkg/shp/util"
 	"github.com/spf13/cobra"
 )
 
@@ -46,18 +45,11 @@ func (sc *DeleteSubCommand) Validate() error {
 }
 
 func (sc *DeleteSubCommand) Run(params params.Params) error {
-	client, err := params.Client()
-	if err != nil {
-		return err
-	}
-
 	var b buildv1alpha1.Build
-	res := client.Resource(BuildGVR).Namespace(params.Namespace())
 
-	err = util.GetObject(res, sc.name, BuildGVR, &b)
-	if err != nil {
+	if err := buildResource.Get(sc.name, &b); err != nil {
 		return err
 	}
 
-	return util.DeleteObject(res, sc.name, BuildGVR)
+	return buildResource.Delete(sc.name)
 }

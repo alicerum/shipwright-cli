@@ -7,30 +7,26 @@ import (
 
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/shipwright-io/cli/pkg/shp/resource"
 	"github.com/spf13/cobra"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
 
 var (
-	BuildGV   schema.GroupVersion
-	BuildGVR  schema.GroupVersionResource
-	BuildKind string
-	BuildGVK  schema.GroupVersionKind
+	buildResource *resource.ShpResource
 )
 
-func init() {
-	BuildGV = buildv1alpha1.SchemeGroupVersion
-	BuildGVR = BuildGV.WithResource("builds")
-
-	BuildKind = "Build"
-	BuildGVK = BuildGV.WithKind(BuildKind)
-}
-
 func Command(p params.Params) *cobra.Command {
+	buildResource = resource.NewShpResource(
+		p,
+		buildv1alpha1.SchemeGroupVersion,
+		"Build",
+		"builds",
+	)
+
 	command := &cobra.Command{
 		Use:     "build",
-		Aliases: []string{"bd", "build"},
+		Aliases: []string{"bd"},
 		Short:   "Manage Builds",
 		Annotations: map[string]string{
 			"commandType": "main",
