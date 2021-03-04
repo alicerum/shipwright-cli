@@ -87,7 +87,7 @@ func (c *CreateCommand) Validate() error {
 	return nil
 }
 
-func (c *CreateCommand) Run(params params.Params) error {
+func (c *CreateCommand) Run(params *params.Params) error {
 	c.initializeBuild()
 
 	return buildResource.Create(c.name, c.build)

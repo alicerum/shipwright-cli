@@ -7,6 +7,7 @@ import (
 
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/shipwright-io/cli/pkg/shp/resource"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
@@ -16,20 +17,18 @@ import (
 )
 
 var (
-	BuildGV  schema.GroupVersion
-	BuildGVR schema.GroupVersionResource
-
-	BuildKind string
-	BuildGVK  schema.GroupVersionKind
+	buildResource resource.Resource
 )
 
-func init() {
-	BuildGV = buildv1alpha1.SchemeGroupVersion
-	BuildGVR = BuildGV.WithResource("builds")
-
-	BuildKind = "Build"
-	BuildGVK = BuildGV.WithKind(BuildKind)
-}
+// Command returns Build subcommand of Shipwright CLI
+// for interaction with shipwright builds
+func Command(p params.Params) *cobra.Command {
+	buildResource = resource.NewResource(
+		p,
+		buildv1alpha1.SchemeGroupVersion,
+		"Build",
+		"builds",
+	)
 
 func Command(p *params.Params) *cobra.Command {
 	command := &cobra.Command{
