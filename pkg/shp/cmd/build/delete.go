@@ -17,7 +17,7 @@ type DeleteCommand struct {
 
 func deleteCmd() runner.SubCommand {
 	c := &cobra.Command{
-		Use:   "delete [flags] name",
+		Use:   "delete [flags] [name]",
 		Short: "Delete Build",
 	}
 
@@ -47,9 +47,11 @@ func (c *DeleteCommand) Validate() error {
 func (c *DeleteCommand) Run(params *params.Params) error {
 	var b buildv1alpha1.Build
 
-	if err := buildResource.Get(c.name, &b); err != nil {
+	br := GetBuildResource(params)
+
+	if err := br.Get(c.cmd.Context(), c.name, &b); err != nil {
 		return err
 	}
 
-	return buildResource.Delete(c.name)
+	return br.Delete(c.cmd.Context(), c.name)
 }

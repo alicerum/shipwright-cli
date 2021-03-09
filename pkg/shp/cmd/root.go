@@ -12,8 +12,10 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "shp [command] [resource] [flags]",
-	Short: "Command-line client for Shipwright's Build API.",
+	Use:           "shp [command] [resource] [flags]",
+	Short:         "Command-line client for Shipwright's Build API.",
+	SilenceUsage:  true,
+	SilenceErrors: true,
 }
 
 // NewCmdSHP create a new SHP root command, linking together all sub-commands organized by groups.

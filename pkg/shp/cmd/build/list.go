@@ -58,7 +58,9 @@ func (c *ListCommand) Run(params *params.Params) error {
 	columnTemplate := "%s\t%s\t%s\n"
 
 	var buildList buildv1alpha1.BuildList
-	if err := buildResource.List(&buildList); err != nil {
+	br := GetBuildResource(params)
+
+	if err := br.List(sc.cmd.Context(), &buildList); err != nil {
 		return err
 	}
 

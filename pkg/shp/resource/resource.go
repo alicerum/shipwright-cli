@@ -1,6 +1,10 @@
 package resource
 
 import (
+	"context"
+
+	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/shipwright-io/cli/pkg/shp/util"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 
@@ -32,49 +36,49 @@ func (r *Resource) getResourceInterface() (dynamic.ResourceInterface, error) {
 	return r.resourceInterface, nil
 }
 
-func (r *Resource) Create(name string, obj interface{}) error {
+func (r *Resource) Create(ctx context.Context, name string, obj interface{}) error {
 	ri, err := r.getResourceInterface()
 	if err != nil {
 		return nil
 	}
 
-	return util.CreateObject(ri, name, r.gv.WithKind(r.kind), obj)
+	return util.CreateObject(ctx, ri, name, r.gv.WithKind(r.kind), obj)
 }
 
-func (r *Resource) Delete(name string) error {
+func (r *Resource) Delete(ctx context.Context, name string) error {
 	ri, err := r.getResourceInterface()
 	if err != nil {
 		return nil
 	}
 
-	return util.DeleteObject(ri, name, r.gv.WithResource(r.resource))
+	return util.DeleteObject(ctx, ri, name, r.gv.WithResource(r.resource))
 }
 
-func (r *Resource) List(result interface{}) error {
+func (r *Resource) List(ctx context.Context, result interface{}) error {
 	ri, err := r.getResourceInterface()
 	if err != nil {
 		return nil
 	}
 
-	return util.ListObject(ri, result)
+	return util.ListObject(ctx, ri, result)
 }
 
-func (r *Resource) Get(name string, result interface{}) error {
+func (r *Resource) Get(ctx context.Context, name string, result interface{}) error {
 	ri, err := r.getResourceInterface()
 	if err != nil {
 		return nil
 	}
 
-	return util.GetObject(ri, name, result)
+	return util.GetObject(ctx, ri, name, result)
 }
 
 func NewResource(p *params.Params, gv schema.GroupVersion, kind, resource string) *Resource {
-	sr := &Resource{
+	r := &Resource{
 		gv:       gv,
 		kind:     kind,
 		resource: resource,
 		params:   p,
 	}
 
-	return sr
+	return r
 }
