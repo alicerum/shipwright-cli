@@ -50,7 +50,11 @@ func DeleteObject(ctx context.Context, resource dynamic.ResourceInterface, name 
 }
 
 func ListObject(ctx context.Context, resource dynamic.ResourceInterface, result interface{}) error {
-	u, err := resource.List(context.TODO(), v1.ListOptions{})
+	return ListObjectWithOptions(ctx, resource, result, v1.ListOptions{})
+}
+
+func ListObjectWithOptions(ctx context.Context, resource dynamic.ResourceInterface, result interface{}, options v1.ListOptions) error {
+	u, err := resource.List(context.TODO(), options)
 	if err != nil {
 		return err
 	}

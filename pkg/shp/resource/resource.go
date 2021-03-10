@@ -8,8 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 
-	"github.com/shipwright-io/cli/pkg/shp/params"
-	"github.com/shipwright-io/cli/pkg/shp/util"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type Resource struct {
@@ -55,12 +54,16 @@ func (r *Resource) Delete(ctx context.Context, name string) error {
 }
 
 func (r *Resource) List(ctx context.Context, result interface{}) error {
+	return r.ListWithOptions(ctx, result, v1.ListOptions{})
+}
+
+func (r *Resource) ListWithOptions(ctx context.Context, result interface{}, options v1.ListOptions) error {
 	ri, err := r.getResourceInterface()
 	if err != nil {
 		return nil
 	}
 
-	return util.ListObject(ctx, ri, result)
+	return util.ListObjectWithOptions(ctx, ri, result, options)
 }
 
 func (r *Resource) Get(ctx context.Context, name string, result interface{}) error {
