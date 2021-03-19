@@ -23,7 +23,7 @@ func TestResource(t *testing.T) {
 
 	p := params.NewParams()
 
-	buildResource := NewShpResource(p, buildv1alpha1.SchemeGroupVersion, kind, resource)
+	buildResource := NewResource(p, buildv1alpha1.SchemeGroupVersion, kind, resource)
 	ri, err := buildResource.getResourceInterface()
 
 	g.Expect(ri).NotTo(gomega.BeNil(), "ResourceInterface should not be nil")

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"github.com/shipwright-io/cli/pkg/shp/cmd/build"
-	"github.com/shipwright-io/cli/pkg/shp/params"
 	"github.com/spf13/cobra"
 
 	"k8s.io/cli-runtime/pkg/genericclioptions"

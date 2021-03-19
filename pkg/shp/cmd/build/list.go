@@ -6,10 +6,10 @@ import (
 	"text/tabwriter"
 
 	buildv1alpha1 "github.com/shipwright-io/build/pkg/apis/build/v1alpha1"
+	"github.com/spf13/cobra"
 
 	"github.com/shipwright-io/cli/pkg/shp/cmd/runner"
 	"github.com/shipwright-io/cli/pkg/shp/params"
-	"github.com/spf13/cobra"
 )
 
 // ListCommand struct contains user input to the List subcommand of Build
@@ -60,7 +60,7 @@ func (c *ListCommand) Run(params *params.Params) error {
 	var buildList buildv1alpha1.BuildList
 	br := GetBuildResource(params)
 
-	if err := br.List(sc.cmd.Context(), &buildList); err != nil {
+	if err := br.List(c.cmd.Context(), &buildList); err != nil {
 		return err
 	}
 

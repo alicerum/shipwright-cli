@@ -3,12 +3,12 @@ package resource
 import (
 	"context"
 
-	"github.com/shipwright-io/cli/pkg/shp/params"
-	"github.com/shipwright-io/cli/pkg/shp/util"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/shipwright-io/cli/pkg/shp/params"
+	"github.com/shipwright-io/cli/pkg/shp/util"
 )
 
 type Resource struct {
